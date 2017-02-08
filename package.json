@@ -1,0 +1,9 @@
+{
+  "name": "react-native-transition",
+  "version": "1.0.0",
+  "description": "A two state view transition library",
+  "main": "index.js",
+  "repository": {},
+  "author": "Ranjan Shrestha",
+  "license": "MIT"
+}
