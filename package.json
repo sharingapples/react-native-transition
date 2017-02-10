@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A two state view transition library",
   "main": "index.js",
-  "repository": {},
+  "repository": "sharingapples/react-native-transition",
   "author": "Ranjan Shrestha",
   "license": "MIT",
   "devDependencies": {
@@ -16,6 +16,6 @@
   },
   "peerDependencies": {
     "react": ">=15.0.0 <16.0.0",
-    "react-native": ">=0.41.0 <1.0.0"
+    "react-native": ">=0.30.0 <1.0.0"
   }
 }
