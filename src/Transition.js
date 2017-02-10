@@ -39,7 +39,7 @@ class Transition extends Component {
     this.__bounds = null;
   }
 
-  add(element, { style, animation }) {
+  add(element, { style, animation } = {}) {
     const { children, currentItem, value } = this.state;
     const animStyle = style || this.state.animStyle;
     const transitionAnimation = animation || defaultAnimation;
