@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 
-import Fade from './Fade';
+// The default transition style
+import Fade from './transitions/Fade';
 
 const styles = StyleSheet.create({
   container: {
@@ -68,26 +69,18 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
       instance = this;
 
       /**
-       * How is the state being used. The children array keeps track of
-       * two elements. The array consists of two elements only during the
-       * transition period otherwise there is only one element and the other
-       * one is null.
-       *
-       * To avoid the react from rendering the incoming element at the end of
-       * the transition, the currentItem state is being used, which keeps
-       * track of the current item within the children array. This way, we
-       * could keep the most recently added element at the same position in
-       * which it was added, avoiding react from rendering the incoming element
-       * at the end of the transition, if the children were to be changed after
-       * transition.
+       * The items that need to be transitioned to care included in the
+       * children state. A transition takes place to reduce the number
+       * of elements on the array to one.
        */
       this.state = {
-        currentItem: 0,
         bounds: null,
         children: [{
           id: createUniqueId(),
           element: React.Children.only(props.children),
-        }, null],
+          style,
+          animation,
+        }],
         value: new Animated.Value(0),
         animStyle: null,
       };
@@ -113,65 +106,73 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
      * is not being invoked on a regular interval like via timers.
      */
     show(element, customStyle = null, customAnimation = null) {
-      const { children, currentItem, value } = this.state;
-      const { onTransitioned } = this.props;
+      const { children } = this.state;
 
-      // Get the animation to be used
-      const transitionAnimation = customAnimation || animation;
-
-      // Get the complementary value
-      const incomingItem = 1 - currentItem;
-
-      if (children[incomingItem] === null) {
-        // A new item has been pushed, we are going to start an animation.
-        // In case, there was already a transition taking place, the incoming
-        // item will simply replace the last added item, which can make the
-        // animation look abrupt
-
-        // Create a config parameter for the animation, taking in the values
-        // provided as the parameters for customizability. But always run the
-        // the value form 0 to 1.
-        const config = Object.assign({}, this.props, {
-          toValue: 1,
-        });
-
-        this.__animation = transitionAnimation(value, config);
-        this.__animation.start((complete) => {
-          this.__animation = null;
-
-          // Once the animation is complete, maintain the stable
-          // state
-          if (complete) {
-            const newChildren = this.state.children.slice();
-            newChildren[currentItem] = null;
-            this.setState({
-              children: newChildren,
-              currentItem: incomingItem,
-              value: new Animated.Value(0),
-            });
-
-            // Also perform a callback
-            if (onTransitioned) {
-              onTransitioned(newChildren[incomingItem].id);
-            }
-          }
-        });
-      } else if (onTransitioned) {
-        // The transitioning item is being replaced by a new one, so
-        // the existing item is considered to be transitioned
-        onTransitioned(children[incomingItem].id);
-      }
+      // Add the newly added elements to the state. The render method
+      // has been designed to render at most 2 elements only.
+      const id = createUniqueId();
+      this.setState({
+        children: children.concat({
+          id,
+          element,
+          style: customStyle || style,
+          animation: customAnimation || animation,
+        }),
+      }, this.__animate);
 
       // Update the childrens with the newly added item
-      const id = createUniqueId();
-      const newChildren = children.slice();
-      newChildren[incomingItem] = { id, element };
-      this.setState({
-        children: newChildren,
-        animStyle: customStyle,
+      return id;
+    }
+
+    __animate = () => {
+      const { children, value } = this.state;
+      const { onTransitioned } = this.props;
+
+      // Run the animation only when there are two children not less not more
+      // less means, the transition is in stable state, more means new items
+      // have been queued, and need to run animation only after the running
+      // animation completes
+      if (children.length !== 2) {
+        return;
+      }
+
+      const config = Object.assign({}, this.props, {
+        toValue: 1,
       });
 
-      return id;
+      // The animation is defined by the incoming element
+      const item = children[1];
+
+      this.__animation = item.animation(value, config);
+      this.__animation.start((complete) => {
+        this.__animation = null;
+
+        // Only if the animation completes, we move further, the animation
+        // is incomplete only in case the component was unmounted
+        if (complete) {
+          const newChildren = this.state.children.slice();
+
+          // Remove the outgoing element
+          newChildren.shift();
+
+          // If any additional item has been added, transition them out
+          // as well, leaving out the last item
+          const skipped = newChildren.splice(1, newChildren.length - 2);
+
+          if (onTransitioned) {
+            onTransitioned(newChildren[0].id);
+
+            skipped.forEach(itm => onTransitioned(itm.id));
+          }
+
+          // Update the transition state, and try to run animation again
+          // if anything has been queued
+          this.setState({
+            children: newChildren,
+            value: new Animated.Value(0),
+          }, this.__animate);
+        }
+      });
     }
 
     __onLayout = ({ nativeEvent }) => {
@@ -183,13 +184,18 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
       });
     }
 
-    __renderElement = (element, idx) => {
+    __renderElement = (item, idx, allItems) => {
       // we get one null element, after the transition is completed
-      if (!element) {
+      if (!item) {
         return null;
       }
 
-      const { bounds, value, currentItem, animStyle } = this.state;
+      // Also only render at most 2 items
+      if (idx > 1) {
+        return null;
+      }
+
+      const { bounds, value } = this.state;
       // bounds are needed by some of the transition styles, so don't
       // render as long as the onLayout has not been invoked
       if (!bounds) {
@@ -198,19 +204,19 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
 
       // Get the transition style to be used, either provided during
       // the transtion call or the default provided during the creation.
-      const userStyle = animStyle || style;
+      const userStyle = allItems.length > 1 ? allItems[1].style : item.style;
 
       // Decide weather the incoming or the outgoing style needs to be used
       // Both 'in' and 'out' styles are used for different items during the
       // transition, whereas only 'out' style is used in stable state. This
       // seems a bit confusing for the stable state item - but consider this
       // that the stable state is the beginning of the outgoing state.
-      const styler = idx === currentItem ? userStyle.out : userStyle.in;
+      const styler = idx === 0 ? userStyle.out : userStyle.in;
 
       const animatedStyle = styler(value, bounds, this.props);
       return (
-        <Animated.View key={idx} style={[styles.animatedContainer, animatedStyle]}>
-          {element}
+        <Animated.View key={item.id} style={[styles.animatedContainer, animatedStyle]}>
+          {item.element}
         </Animated.View>
       );
     }
