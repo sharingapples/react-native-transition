@@ -1,9 +1,19 @@
-import Transition from './src/Transition';
-import Fade from './src/Fade';
-import Flip from './src/Flip';
+import createTransition from './src/Transition';
+import Fade from './src/transitions/Fade';
+import FlipX from './src/transitions/FlipX';
+import FlipY from './src/transitions/FlipY';
+import SlideLeft from './src/transitions/SlideLeft';
+import SlideRight from './src/transitions/SlideRight';
+import SlideUp from './src/transitions/SlideUp';
+import SlideDown from './src/transitions/SlideDown';
 
-export default Transition;
 export {
+  createTransition,
   Fade,
-  Flip,
+  FlipX,
+  FlipY,
+  SlideLeft,
+  SlideRight,
+  SlideUp,
+  SlideDown,
 };
