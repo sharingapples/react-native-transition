@@ -16,11 +16,11 @@ Check out a demo application available at
 
 ### Usage
 
-1. Import `createTransition` from the library  
-   <code>import { createTransition } from 'react-native-transition';</code>
+1. Import `createTransition` and transition styles from the library  
+   <code>import { createTransition, FlipX } from 'react-native-transition';</code>
 
-2. Create a transition component  
-   <code>const Transition = createTransition();</code>
+2. Create a transition component with optional styles  
+   <code>const Transition = createTransition(FlipX);</code>
 
 3. Render the initial view within the `Transition` component  
    <code>
@@ -39,9 +39,9 @@ Check out a demo application available at
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-import { createTransition } from 'react-native-transition';
+import { createTransition, FlipX } from 'react-native-transition';
 
-const Transition = createTransition();
+const Transition = createTransition(FlipX);
 
 class YourView extends Component {
   this.switch = () => {
