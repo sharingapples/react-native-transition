@@ -65,8 +65,8 @@ class YourView extends Component {
 }
 ```
 
-For a more complete example, checkout [Demo.js](https://github.com/sharingapples/react-native-transition-demo/blob/master/Demo.js)
-and [Window.js](https://github.com/sharingapples/react-native-transition-demo/blob/master/src/Window.js) from
+For a more complete example, checkout [Demo.js](https://github.com/sharingapples/react-native-transition-demo/tree/master/src/Demo.js)
+and [Window.js](https://github.com/sharingapples/react-native-transition-demo/tree/master/src/Window.js) from
 [react-native-transition-demo](https://github.com/sharingapples/react-native-transition-demo).
 
 ### createTransition([style], [animation])
