@@ -22,7 +22,7 @@ Check out a demo application available at
 2. Create a transition component  
    <code>const Transition = createTransition();</code>
 
-3. Render the initial view within the `Transition` component
+3. Render the initial view within the `Transition` component  
    <code>
    &lt;Transition&gt;
    &lt;View&gt;...&lt;View&gt;
@@ -31,7 +31,7 @@ Check out a demo application available at
 
 4. Use the show method from component to perform transition  
    <code>
-     onPress(e) => { Transition.show(&lt;View&gt; ... &lt;/View&gt;); }
+     onPress = (e) => { Transition.show(&lt;View&gt; ... &lt;/View&gt;); }
    </code>
 
 #### Example
@@ -189,6 +189,6 @@ const Brooom = {
       }),
     }],
   }),
-}
+};
 ```
 
