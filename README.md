@@ -2,24 +2,50 @@
 A fully customizable view transition library for react-native. The library
 could be used to transition entire screens or small parts within a View.
 
+The library has been designed to use customizable transition styles, that
+could be easily created and plugged into the application. Checkout the
+[Custom Transitions](#custom-transitions) section to learn more about creating
+transitions.
+
 Check out a demo application available at
 [Transition Demo](https://github.com/sharingapples/react-native-transition-demo).
+![Demo Animation](./docs/demo.gif)
 
 ### Installation
 ` $ npm install --save react-native-transition`
 
 ### Usage
+
+1. Import `createTransition` from the library
+   <code>import { createTransition } from 'react-native-transition';</code>
+
+2. Create a transition component
+   <code>const Transition = createTransition();</code>
+
+3. Use the transition component to render the initial view
+   <code>
+   &lt;Transition&gt;
+   &lt;View&gt;...&lt;View&gt;
+   &lt;/Transition&gt;
+   </code>
+
+4. Use the show method from component to perform transition
+   <code>
+     onPress(e) => { Transition.show(&lt;View&gt; ... &lt;/View&gt;); }
+   </code>
+
+#### Example
 ```javascript
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-import Transition, { Flip } from 'react-native-transition';
+import { createTransition } from 'react-native-transition';
 
-class MyView extends Component {
+const Transition = createTransition();
+
+class YourView extends Component {
   this.switch = () => {
-    // Perform the transition with the new element to be
-    // shown via transition
-    this._transition.add(
+    Transition.show(
       <View style={{ flex: 1, alignItems: 'center' }}>
         <Text>This is another view</Text>
       </View>
@@ -28,49 +54,71 @@ class MyView extends Component {
 
   render() {
     return (
-      <Transition style={Flip} ref={(node) => { this._transition = node; }}>
+      <Transition>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text>This the initial View</Text>
           <Button title="Press to Switch" onPress={this.switch} />
         </View>
       </Transition>
-    )
+    );
   }
 }
 ```
 
-### Props
-**style** object
-Defines the transition style to be used. The library provides `Fade` and
-`Flip` styles. `Fade` is the default style. See **Custom Transitions** below
-for examples on creating custom transitions.
+For a more complete example, checkout [Demo.js](https://github.com/sharingapples/react-native-transition-demo/blob/master/Demo.js)
+and [Window.js](https://github.com/sharingapples/react-native-transition-demo/blob/master/src/Window.js) from
+[react-native-transition-demo](https://github.com/sharingapples/react-native-transition-demo).
 
-**animation** function
-Override the animation mechanism used during the transition. The default
-animation method is timed Animation. See **Custom Animations** below
-for examples on creating custom animations.
+### createTransition([style], [animation])
+Creates a Transition component used for providing transitionable view.
 
-Any other property passed to the the component is directly available to
-the `animation` implementaions. For example `duration` props if passed
-would be used by the `timedAnimation` and work accordingly.
+#### Arguments
+1. `style` (object): A transition style definition object. Stock transition styles - `Fade`,
+`FlipX`, `FlipY`, `SlideLeft`, `SlideRight`, `SlideUp`, `SlideDown` are available
+with the libraries. By default `Fade` transition is used.
 
-*The `Transition` component should have **one and only one element** as a child.
+2. `animation` (function): Animation used for performing the transition. It could
+be one of the `Animated.timing`, `Animated.spring` or `Animated.decay` provided
+by react-native animation library.
+
+### Transition component
+The `Transition` component should have **one and only one element** as a child.
 This child element is rendered before any transition takes place. Once the
-transition has occured, this initial child would not be mounted.*
+transition has occured, this initial child would not be mounted.
 
-### Methods
-**add(element, [style], [animation])**
-The transition is trigged by adding an element to the `Transition` instance.
-The existing element will be replaced by the supplied element through a
-transition animation. The `style` parameter could be passed to override
-the transition style passed to the component. Similarly `animation` parameter
-could be passed to override the default animation of the component.
+#### Methods
+**show(element, [style], [animation])**
+The `show` method triggers the transition with the provided element appearing
+through transition.
+
+This method is available both as static as well as instance method of the
+component. In most of the cases, the static method could be used, while for
+some advanced use cases where the Transition component is placed on inner
+views and are being transitioned on automatic intervals, instance method
+could be used for a much individual instance access through `refs`.
+
+**Arguments**
+> **element** *(Element)*: The element that needs to be rendered via transition.
+> **style** *(object)*: Override the transition style for this specific transition.
+> **animation** *(function)*: Override the transition animation for this specific transition.
+
+**Returns** A unique id that represents the transition of this particular element which
+could be used to track the completion of the transition.
+
+> *Note: In case an element is added faster than being transitioned in. The visual
+transition will be skipped for the intermediate elements. The `onTransitioned` callback
+however will be called for all the elements even those skipped in the order that
+they were supposed to be shown*
+
+#### Props
+**onTransitioned**: A function which is called for every item that has been shown
+with the transition. The function is called with the **uniqueId** returned by `show`
+method.
 
 ### Custom Transitions
-The transition library comes with two different transitions at the moment -
-Flip and Fade, which are quite simple. It is however much easier to create
-custom transitions if you have the idea how the `Animated` library of
-`react-native` works.
+The transition library comes with stock transitions which are limited, but
+can be easily extended by creating your own custom transitions. However, you must
+have knowledge of how animation works in react-native.
 
 A transition object should have two properties - `out` and `in`. The `out`
 property creates the style required for the view that is transitioning out
@@ -80,15 +128,13 @@ for the respective container view. The function has following parameters:
 > **value** `Animated.Value`
 > An animated value that runs from `0` to `1` during the transition. The
 various style attributes take interpolated values from this value. Go
-through the react-native Animation docs for details on using this value.
+through the react-native Animation docs for details on using interpolation.
 >
 > **bounds** { width, height }
 > Some animation styles need to know the size of the view being transitioned.
 >
 > **props**
 > The props that was passed to the `Transition` component.
-
-Check out
 
 #### Example transition - Slide
 ```javascript
@@ -110,9 +156,9 @@ const Slide = {
 };
 ```
 
-#### Example transition - Zooom
+#### Example transition - Brooom
 ```javascript
-const Zooom = {
+const Brooom = {
   out: (value, bounds) => ({
     left: value.interpolate({
       inputRange: [0, 1],
