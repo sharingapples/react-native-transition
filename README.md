@@ -8,7 +8,7 @@ could be easily created and plugged into the application. Checkout the
 transitions.
 
 Check out a demo application available at
-[Transition Demo](https://github.com/sharingapples/react-native-transition-demo).
+[Transition Demo](https://github.com/sharingapples/react-native-transition-demo).  
 ![Demo Animation](./docs/demo.gif)
 
 ### Installation
@@ -16,20 +16,20 @@ Check out a demo application available at
 
 ### Usage
 
-1. Import `createTransition` from the library
+1. Import `createTransition` from the library  
    <code>import { createTransition } from 'react-native-transition';</code>
 
-2. Create a transition component
+2. Create a transition component  
    <code>const Transition = createTransition();</code>
 
-3. Use the transition component to render the initial view
+3. Render the initial view within the `Transition` component
    <code>
    &lt;Transition&gt;
    &lt;View&gt;...&lt;View&gt;
    &lt;/Transition&gt;
    </code>
 
-4. Use the show method from component to perform transition
+4. Use the show method from component to perform transition  
    <code>
      onPress(e) => { Transition.show(&lt;View&gt; ... &lt;/View&gt;); }
    </code>
@@ -98,9 +98,9 @@ views and are being transitioned on automatic intervals, instance method
 could be used for a much individual instance access through `refs`.
 
 **Arguments**
-> **element** *(Element)*: The element that needs to be rendered via transition.
-> **style** *(object)*: Override the transition style for this specific transition.
-> **animation** *(function)*: Override the transition animation for this specific transition.
+> **element** *(Element)*: The element that needs to be rendered via transition.  
+> **style** *(object)*: Override the transition style for this specific transition.  
+> **animation** *(function)*: Override the transition animation for this specific transition.  
 
 **Returns** A unique id that represents the transition of this particular element which
 could be used to track the completion of the transition.
@@ -115,6 +115,10 @@ they were supposed to be shown*
 with the transition. The function is called with the **uniqueId** returned by `show`
 method.
 
+Any other props passed to the `Transition` component is passed as `config` parameter
+to the `animation` function. If you are using a `Animated.timing` animation, you
+could pass `duration` or `easing` props and so on.
+
 ### Custom Transitions
 The transition library comes with stock transitions which are limited, but
 can be easily extended by creating your own custom transitions. However, you must
@@ -125,12 +129,12 @@ property creates the style required for the view that is transitioning out
 and the `in` property creates the same for the incoming view. Both the `in`
 and `out` properties should be function call that returns a new style object
 for the respective container view. The function has following parameters:
-> **value** `Animated.Value`
+> **value** (`Animated.Value`)  
 > An animated value that runs from `0` to `1` during the transition. The
 various style attributes take interpolated values from this value. Go
 through the react-native Animation docs for details on using interpolation.
 >
-> **bounds** { width, height }
+> **bounds** ({ width, height })  
 > Some animation styles need to know the size of the view being transitioned.
 >
 > **props**
