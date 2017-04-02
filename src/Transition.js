@@ -35,10 +35,14 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
 
       /* An optional function that is called, once the transition is completed */
       onTransitioned: PropTypes.func,
+
+      /* An optional callback invoked when the transition has been configured */
+      onLayout: PropTypes.func,
     };
 
     static defaultProps = {
       onTransitioned: undefined,
+      onLayout: undefined,
     }
 
     /**
@@ -135,7 +139,8 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
 
     __animate = () => {
       const { children, value } = this.state;
-      const { onTransitioned } = this.props;
+      // eslint-disable-next-line no-unused-vars
+      const { onTransitioned, onLayout, ...other } = this.props;
 
       // Run the animation only when there are two children not less not more
       // less means, the transition is in stable state, more means new items
@@ -145,7 +150,7 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
         return;
       }
 
-      const config = Object.assign({}, this.props, {
+      const config = Object.assign({}, other, {
         toValue: 1,
       });
 
@@ -190,7 +195,7 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
           width: nativeEvent.layout.width,
           height: nativeEvent.layout.height,
         },
-      });
+      }, () => this.props.onLayout && this.props.onLayout(this.state.bounds));
     }
 
     __renderElement = (item, idx, allItems) => {

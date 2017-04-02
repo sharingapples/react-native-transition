@@ -120,6 +120,9 @@ they were supposed to be shown*
 with the transition. The function is called with the **uniqueId** returned by `show`
 method.
 
+**onLayout**: A function which is called when the transition layout is
+available with the bounds. Every time the layout changes, this method is invoked.
+
 Any other props passed to the `Transition` component is passed as `config` parameter
 to the `animation` function. If you are using a `Animated.timing` animation, you
 could pass `duration` or `easing` props and so on.
