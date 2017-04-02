@@ -97,6 +97,11 @@ some advanced use cases where the Transition component is placed on inner
 views and are being transitioned on automatic intervals, instance method
 could be used for a much individual instance access through `refs`.
 
+**getBounds()**
+Retreive the bounding size of the Transition componet. It returns an object
+with { width, height }. The bounding size is not available until the component
+has been attached.
+
 **Arguments**
 > **element** *(Element)*: The element that needs to be rendered via transition.  
 > **style** *(object)*: Override the transition style for this specific transition.  

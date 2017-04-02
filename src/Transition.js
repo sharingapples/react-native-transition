@@ -124,6 +124,15 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
       return id;
     }
 
+    /**
+     * Retrieve the bounds of the transition layer.
+     * @returns Object with { width, height }. Caution, the bounds are
+     *          available only after the component has been attached.
+     */
+    getBounds() {
+      return this.state.bounds;
+    }
+
     __animate = () => {
       const { children, value } = this.state;
       const { onTransitioned } = this.props;
