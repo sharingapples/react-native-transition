@@ -1,6 +1,6 @@
 {
   "name": "react-native-transition",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A view transition library for react-native",
   "main": "index.js",
   "repository": "sharingapples/react-native-transition",
@@ -16,6 +16,6 @@
   },
   "peerDependencies": {
     "react": ">=15.0.0 <16.0.0",
-    "react-native": ">=0.30.0 <1.0.0"
+    "react-native": ">=0.40.0 <1.0.0"
   }
 }
