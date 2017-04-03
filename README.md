@@ -148,6 +148,16 @@ through the react-native Animation docs for details on using interpolation.
 > **props**
 > The props that was passed to the `Transition` component.
 
+#### Supporting Native Transitions
+Since react native v0.40+, the native animation support has been provided.
+The transitions can now define, `useNativeDriver` property with boolean
+`true` to support native animation. Take caution, as all styles are not
+supported for native animation. Only `opacity`, `backgroundColor` and 
+`transform` properties are supported for now. If the `useNativeDriver` is
+enabled on transition styles that changes any other properties, an 
+exception would be thrown. `Fade`, `FlipX`, `FlipY` are the stock styles
+that now support native animations.
+
 #### Example transition - Slide
 ```javascript
 const Slide = {
