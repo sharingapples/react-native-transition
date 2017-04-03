@@ -6,9 +6,12 @@ import SlideLeft from './src/transitions/SlideLeft';
 import SlideRight from './src/transitions/SlideRight';
 import SlideUp from './src/transitions/SlideUp';
 import SlideDown from './src/transitions/SlideDown';
+import transitionStylePropType from './src/transitionStylePropType';
 
 export {
   createTransition,
+  transitionStylePropType,
+
   Fade,
   FlipX,
   FlipY,
