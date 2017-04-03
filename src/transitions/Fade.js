@@ -7,4 +7,5 @@ export default {
     }),
   }),
   in: value => ({ opacity: value }),
+  useNativeDriver: true,
 };

@@ -150,12 +150,14 @@ const createTransition = (style = Fade, animation = Animated.timing) => {
         return;
       }
 
-      const config = Object.assign({}, other, {
-        toValue: 1,
-      });
-
       // The animation is defined by the incoming element
       const item = children[1];
+      console.log('Using nativeDriver', item.style.useNativeDriver);
+
+      const config = Object.assign({}, other, {
+        toValue: 1,
+        useNativeDriver: item.style.useNativeDriver,
+      });
 
       this.__animation = item.animation(value, config);
       this.__animation.start((complete) => {

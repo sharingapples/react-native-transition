@@ -31,4 +31,6 @@ export default {
       }),
     }],
   }),
+
+  useNativeDriver: true,
 };
