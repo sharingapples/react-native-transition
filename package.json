@@ -1,18 +1,30 @@
 {
   "name": "react-native-transition",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A view transition library for react-native",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": "sharingapples/react-native-transition",
   "author": "Ranjan Shrestha",
   "license": "MIT",
+  "scripts": {
+    "build": "babel --out-dir lib --ignore __tests__ src --source-maps",
+    "clean": "rimraf lib && mkdir lib",
+    "prepublish": "rimraf lib && babel --out-dir lib --ignore __tests__ src"
+  },
+  "files": [
+    "lib",
+    "doc"
+  ],
   "devDependencies": {
+    "babel-cli": "^6.24.0",
     "babel-eslint": "^7.1.1",
+    "babel-preset-react-native": "^1.9.1",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.9.0"
+    "eslint-plugin-react": "^6.9.0",
+    "rimraf": "^2.6.1"
   },
   "peerDependencies": {
     "react": ">=15.0.0 <16.0.0",
