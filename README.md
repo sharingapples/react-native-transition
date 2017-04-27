@@ -11,6 +11,13 @@ Check out a demo application available at
 [Transition Demo](https://github.com/sharingapples/react-native-transition-demo).  
 ![Demo Animation](./docs/demo.gif)
 
+### Caution
+The react-native library below 0.43 throws `onLayout` event on Android for every change
+in the child UI elements (even when changes are made through setNativeProps) even
+when the parent's layout is unaffected. This problem is specially observable while using
+drag & drop libraries, wherein this even is called a lot, affecting the performance. So
+use caution while using this library on React Native versions below 0.43.
+
 ### Installation
 ` $ npm install --save react-native-transition`
 
