@@ -2,3 +2,7 @@ node_modules/
 
 # Don't include generated files
 /lib
+
+# Ignore debug files
+npm-debug.log
+
